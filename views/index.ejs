@@ -1,0 +1,40 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+    <% if (locals.user) {%>
+        <h1>WELCOME BACK <%= user.firstname %> <%= user.lastname %></h1>
+        <a href="/create-message">Create new Message</a>
+        <a href="/log-out">LOG OUT</a>
+        <% } else { %>
+        <div style="display: flex; gap: 10px;">
+            <a href="/create">Sign In</a>
+            <a href="/log-in">Log In</a>
+        </div>
+    <%}%>  
+
+    <div>
+        <% messages.forEach(message => { %>
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <h2><%= message.title %></h2>
+                <p><strong>Description:</strong> <%= message.description %></p>
+                <% if (locals.user) {%>
+                    <p><strong>Date:</strong> <%= message.date.toLocaleString() %></p>
+                    <p><strong>Author:</strong> <%= message.firstname %> <%= message.lastname %></p>
+                <%}%>
+
+                <% if (locals.user && locals.user.is_admin) {%>
+                    <form action="/delete-message" method="POST" style="display: inline;">
+                        <input type="hidden" name="messageid" value="<%= message.id %>">
+                        <button type="submit">Delete</button>
+                    </form>
+                <%}%>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>
